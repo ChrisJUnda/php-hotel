@@ -1,5 +1,7 @@
 <?php
 
+//var_dump($_GET);
+
 $hotels = [
 
     [
@@ -40,6 +42,29 @@ $hotels = [
 
 ];
 
+$filtered_hotels = $hotels;
+
+//ricerca
+
+$has_parking = !empty($_GET['has-parking']);
+
+//Ricerca per parcheggio
+if ($has_parking) {
+
+    $temp_hotels = [];
+
+    foreach ($filtered_hotels as $hotel) {
+        if ($hotel['parking'] === true) {
+            $temp_hotels[] = $hotel;
+            //array_push($temp_hotels, $hotel);
+        }
+    }
+
+    $filtered_hotels = $temp_hotels;
+
+    //echo 'faccio la ricerca per parcheggio';
+}
+
 ?>
 
 
@@ -64,7 +89,40 @@ $hotels = [
         </div>
     </header>
     <main>
-        <div class="container-fluid text-center p-3">
+        <!--- lista hotel --->
+        <div class="container p-3">
+
+            <section id="hotel-search">
+                <form action="index.php" method="GET">
+                    <div class="row align-items-center">
+
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="has-parking" name="has-parking" value="1" <?php if ($has_parking) : ?> checked <?php endif; ?>>
+                                <label class="form-check-label" for="has-parking">
+                                    Solo hotels con parcheggio
+                                </label>
+                            </div>
+                        </div>
+                        <!---
+
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
+                    </div>
+                    ---->
+                        <div class="col">
+                            <button class="btn btn-primary btn-sm">
+                                Search
+                            </button>
+                        </div>
+
+                </form>
+
+        </div>
+        </section>
+
+        <hr>
+        <section id="hotel-list">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -76,7 +134,7 @@ $hotels = [
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($hotels as $hotel) : ?>
+                    <?php foreach ($filtered_hotels as $hotel) : ?>
                         <tr>
                             <td>
                                 <?php echo $hotel['name']; ?>
@@ -97,7 +155,7 @@ $hotels = [
                     <?php endforeach ?>
                 </tbody>
             </table>
-
+        </section>
         </div>
 
 
